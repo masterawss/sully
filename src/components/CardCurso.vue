@@ -1,22 +1,26 @@
 <template lang="pug">
-    q-card.q-my-sm( :class="'gradient-'+i+ ' shadow-'+i")
+    q-card.q-my-sm.shadow
       q-card-section
-        q-item(clickable v-ripple dark @click="$router.push({name: 'curso.show', params: {id: 1}})")
-          q-item-section
-            q-item-label.text-weight-bolder Nombre del curso
-            q-item-label(caption) Nombre del profesor
-          q-item-section(avatar)
+        q-item()
+          q-item-section(clickable v-ripple @click="$router.push({name: 'curso.show', params: {id: curso.id}})")
+            q-item-label.text-weight-bolder(:class="'text-gradient-'+curso.color") {{ curso.nombre }}
+            q-item-label(caption) {{ curso.docente }} 
+              br
+              q-chip.text-white( :class="'gradient-'+curso.color" dense) {{curso.temas.length}} temas
+          w-card-curso-actions(v-if="showActions" :curso="curso")
+          
+          //- q-item-section(avatar)
             q-icon(color="white" name="fa fa-angle-right")
 </template>
 
 <script>
+import WCardCursoActions from './CardCursoActions'
+import {QChip} from 'quasar'
 export default {
-    data: () => ({
-        i: Math.floor(Math.random() * 5 + 1)
-    })
+  props: ['curso', 'showActions'],
+  components: {WCardCursoActions, QChip},
+  data: () => ({
+
+  })
 }
 </script>
-
-<style>
-
-</style>

@@ -11,10 +11,17 @@
   },
   "dependencies": {
     "@quasar/extras": "^1.0.0",
-    "quasar": "^1.0.0"
+    "dexie": "^2.0.4",
+    "firebase": "^6.3.5",
+    "moment": "^2.24.0",
+    "quasar": "^1.0.0",
+    "vue-moment": "^4.0.0",
+    "vue-social-sharing": "^2.4.6",
+    "vue-swatches": "^1.0.4",
+    "vuefire": "^2.1.2"
   },
   "devDependencies": {
-    "@fortawesome/fontawesome-free": "^5.9.0",
+    "@fortawesome/fontawesome-free": "^5.10.1",
     "@quasar/app": "^1.0.0",
     "pug": "^2.0.4",
     "pug-plain-loader": "^1.0.0"

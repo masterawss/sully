@@ -6,35 +6,57 @@
                     q-icon(name='fa fa-angle-left')
                 q-toolbar-title
                     strong Buscar
-                q-btn(flat round dense size="sm" icon="fa fa-ellipsis-v" @click="$router.push({name: 'curso.create'})")
+                //- q-btn(flat round dense size="sm" icon="fa fa-ellipsis-v")
                 
         q-page-container
-            .round.shadow-black.q-mx-md.q-px-md.q-my-md
-                q-input(borderless dense v-model="txt_buscar" label="Buscar cursos ...")
-                    template(v-slot:prepend)
-                        q-icon(name="search")
-                    template(v-slot:append)
-                        q-icon( v-show="txt_buscar !== ''" name="close" @click="txt_buscar = ''" class="cursor-pointer")
-            
-            q-page-sticky(position="bottom-right" :offset="[13, 13]")
-                q-btn( label="Crear curso" rounded no-caps icon="add" color="secondary" @click="$router.push({name: 'curso.create'})")
+            w-search-input(@cursos_encontrados="cursosEncontrados")
+            .flex.flex-center
+                q-circular-progress.q-mt-xl(
+                indeterminate
+                v-show="loading"
+                size="50px"
+                color="primary")
+            w-card-curso.q-mb-xs(v-for="curso in cursos" :key="curso.id" :curso="curso" :show-actions="true")
+
+            .q-mt-xl.q-pt-md
+        q-page-sticky(position="bottom-right" :offset="[13, 13]")
+            q-btn( label="Crear curso" rounded no-caps icon="add" color="secondary" @click="$router.push({name: 'curso.create'})")
 </template>
 
 <script>
-import {QInput, QPageSticky} from 'quasar'
+import { QPageSticky, QCircularProgress} from 'quasar'
+import WSearchInput from '../../components/SearchInput'
+import WCardCurso from '../../components/CardCurso2'
 export default {
-    components: {QInput, QPageSticky},
+    components: { QPageSticky,WSearchInput,WCardCurso, QCircularProgress},
     data: () => ({
-        txt_buscar: ''
-    })
+        cursos: [],
+        loading: false
+    }),
+    created(){
+        this.loading = true
+        this.$firebase.collection('cursos').get().then(querySnapshot => {
+            this.loading = false
+            if (!querySnapshot.empty) {
+                querySnapshot.forEach(curso => {
+                    let c = curso.data()
+                    // c.id = curso.id
+                    this.cursos.push(c)
+                });
+            }
+        })
+    },
+    methods: {
+        cursosEncontrados(cursos){
+            console.log('LOS CURSOS', cursos);
+            
+            this.cursos = cursos
+        }
+    }
 }
 </script>
 
-<style scoped>
-    .round{
-        border-radius: 50px;
-    }
-    .flat{
-        border-style: none
-    }
+<style>
+
 </style>
+

@@ -8,11 +8,8 @@
           strong Mis cursos
         q-btn(flat round dense size="sm" icon="fa fa-plus" @click="$router.push({name: 'curso.search'})")
     q-page-container
-      div.q-mx-md
-        .text-h6.q-mt-lg Ciclo 2
-        w-card-curso(v-for="i in 5")
-        .text-h6.q-mt-lg Ciclo 1
-        w-card-curso(v-for="i in 4")
+      div
+        w-card-curso.q-mb-xs(v-for="curso in cursos" :key="curso.id" show-actions="true" :curso="curso")
         
 
         //- q-card
@@ -35,10 +32,30 @@
 
 <script>
 import {QCard, QCardSection} from 'quasar'
-import WCardCurso from '../../components/CardCurso'
+import WCardCurso from '../../components/CardCurso2'
+import firebase from 'firebase'
 export default {
   name: 'PageIndex',
-  components: {QCard, QCardSection, WCardCurso}
+  components: {QCard, QCardSection, WCardCurso},
+  created(){
+    firebase.auth().onAuthStateChanged( user => {
+        if (user) {
+            this.$firebase.collection('usuarios').doc(user.uid).collection('cursos_suscritos').get().then(querySnapshot => {
+                let cursos = []
+                querySnapshot.forEach(curso => {
+                    let c = curso.data()
+                    c.id = curso.id
+                    cursos.push(c)
+                })
+                console.log('CURSOSS',cursos);
+                this.cursos = cursos
+            })
+        }  
+    })
+  },
+  data: () => ({
+    cursos: []
+  })
 }
 </script>
 
